@@ -1,3 +1,9 @@
-C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\config\CacheConfig.java
-C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\services\ItemService.java
+C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\adapter\controller\UserController.java
+C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\application\service\UserCacheService.java
+C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\config\EventConfig.java
+C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\config\RedisConfig.java
+C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\domain\event\UserCreatedEvent.java
+C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\domain\event\UserEventListener.java
+C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\domain\model\User.java
+C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\infrastructure\cache\RedisUserRepository.java
 C:\Users\lgome\Workspace\spring-cache-redis\src\main\java\com\springboot_cache_redis\SpringbootCacheRedisApplication.java

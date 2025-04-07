@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-cache-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-cache-redis
+  template:
+    metadata:
+      labels:
+        app: springboot-cache-redis
+    spec:
+      containers:
+        - name: springboot-cache-redis
+          image: luizgomes92/springboot-cache-redis:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_REDIS_HOST
+              value: redis
+            - name: SPRING_REDIS_PORT
+              value: "6379"

@@ -1,0 +1,9 @@
+com\springboot_cache_redis\adapter\controller\UserController.class
+com\springboot_cache_redis\domain\event\UserEventListener.class
+com\springboot_cache_redis\application\service\UserCacheService.class
+com\springboot_cache_redis\config\RedisConfig.class
+com\springboot_cache_redis\config\EventConfig.class
+com\springboot_cache_redis\domain\model\User.class
+com\springboot_cache_redis\SpringbootCacheRedisApplication.class
+com\springboot_cache_redis\domain\event\UserCreatedEvent.class
+com\springboot_cache_redis\infrastructure\cache\RedisUserRepository.class
