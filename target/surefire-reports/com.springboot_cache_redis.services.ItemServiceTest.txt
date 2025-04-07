@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.springboot_cache_redis.services.ItemServiceTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.67 s -- in com.springboot_cache_redis.services.ItemServiceTest
