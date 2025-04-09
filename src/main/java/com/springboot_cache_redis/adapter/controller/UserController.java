@@ -1,33 +1,38 @@
 package com.springboot_cache_redis.adapter.controller;
 
-import com.springboot_cache_redis.domain.model.User;
-import com.springboot_cache_redis.infrastructure.cache.RedisUserRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.springboot_cache_redis.application.dto.UserDTO;
+import com.springboot_cache_redis.application.service.UserComparisonService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
-    private final RedisUserRepository redisUserRepository;
+    private final UserComparisonService userComparisonService;
 
-    public UserController(RedisUserRepository redisUserRepository) {
-        this.redisUserRepository = redisUserRepository;
+    @GetMapping("/db")
+    public List<UserDTO> getUsersFromDatabase() {
+        long start = System.currentTimeMillis();
+        List<UserDTO> users = userComparisonService.getUsersFromDatabase();
+        long end = System.currentTimeMillis();
+        log.info("Tempo Banco de Dados: {}ms", end - start);
+        return users;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> saveUser(@RequestBody User user) {
-        redisUserRepository.save(user);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable UUID id) {
-        Optional<User> user = redisUserRepository.findById(id.toString());
-        return user.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/cache")
+    public List<UserDTO> getUsersFromRedis() {
+        long start = System.currentTimeMillis();
+        List<UserDTO> users = userComparisonService.getUsersFromRedisCache();
+        long end = System.currentTimeMillis();
+        log.info("Tempo Cache Redis: {}ms", end - start);
+        return users;
     }
 }

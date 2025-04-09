@@ -1,57 +1,65 @@
 package com.springboot_cache_redis.adapter.controller;
 
-import com.springboot_cache_redis.domain.model.User;
-import com.springboot_cache_redis.infrastructure.cache.RedisUserRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.springboot_cache_redis.application.dto.UserDTO;
+import com.springboot_cache_redis.application.service.UserComparisonService;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WebMvcTest(UserController.class)
+@Import(UserControllerTest.MockConfig.class)
 class UserControllerTest {
 
-    @Mock
-    private RedisUserRepository redisUserRepository;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @InjectMocks
-    private UserController userController;
+    @Autowired
+    private UserComparisonService userComparisonService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    @TestConfiguration
+    static class MockConfig {
+        @Bean
+        public UserComparisonService userComparisonService() {
+            return mock(UserComparisonService.class);
+        }
     }
 
     @Test
-    void saveUser() {
-        User user = new User(UUID.randomUUID(), "John Doe", "john.doe@example.com");
+    void shouldReturnUsersFromDatabase() throws Exception {
+        List<UserDTO> users = List.of(
+                new UserDTO(UUID.randomUUID(), "Luiz", "luiz@example.com")
+        );
+        when(userComparisonService.getUsersFromDatabase()).thenReturn(users);
 
-        doNothing().when(redisUserRepository).save(any(User.class));
-
-        ResponseEntity<Void> response = userController.saveUser(user);
-
-        assertEquals(200, response.getStatusCodeValue());
-        verify(redisUserRepository, times(1)).save(user);
+        mockMvc.perform(get("/users/db"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$[0].name").value("Luiz"));
     }
 
     @Test
-    void getUserById() {
-        UUID userId = UUID.randomUUID();
-        User user = new User(userId, "John Doe", "john.doe@example.com");
+    void shouldReturnUsersFromRedisCache() throws Exception {
+        List<UserDTO> users = List.of(
+                new UserDTO(UUID.randomUUID(), "Joana", "joana@example.com")
+        );
+        when(userComparisonService.getUsersFromRedisCache()).thenReturn(users);
 
-        when(redisUserRepository.findById(userId.toString())).thenReturn(Optional.of(user));
-
-        ResponseEntity<User> response = userController.getUserById(userId);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(user, response.getBody());
-        verify(redisUserRepository, times(1)).findById(userId.toString());
+        mockMvc.perform(get("/users/cache"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$[0].email").value("joana@example.com"));
     }
 }
