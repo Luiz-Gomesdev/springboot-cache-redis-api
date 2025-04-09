@@ -37,8 +37,6 @@ Ao comparar o tempo de resposta entre chamadas diretas ao banco de dados e chama
 
 ## 📦 Arquitetura
 
-## 📦 Arquitetura
-
 ```text
                     +------------------+
                     |   Client/API     |
